@@ -2,7 +2,8 @@ node_modules/
 
 .env
 
-client/
-server/
-database/
-native-engine/
+.gitignore
+
+apps/client/src/
+apps/server/src/
+packages/database/src/

@@ -1,0 +1,10 @@
+{
+  "name": "@autocomplete/database",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "mongoose": "^9.10.3"
+  }
+}
