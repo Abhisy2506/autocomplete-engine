@@ -1,0 +1,13 @@
+{
+  "name": "autocomplete-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start:server": "npm --prefix apps/server run start",
+    "dev:server": "npm --prefix apps/server run dev",
+    "seed": "node packages/database/src/seed.js"
+  }
+}
