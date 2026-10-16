@@ -1,0 +1,73 @@
+.app-header {
+  width: 100%;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-button {
+  background: none;
+  border: var(--btn-border);
+  font-size: 14px;
+  color: var(--text-secondary, #5f6368);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  box-shadow: var(--btn-shadow);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-button:hover {
+  background-color: var(--btn-hover, #f1f3f4);
+  color: var(--text-primary, #202124);
+}
+
+.theme-toggle-btn {
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border-color, #dfe1e5);
+  border-radius: 20px;
+  
+}
+
+.app-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 20px;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-color, #dfe1e5);
+}
+
+.app-footer > a {
+  font-weight: bold;
+  color: var(--border-focus, #1a73e8);
+  transition: color 0.2s;
+}
+
+.app-footer > a:hover {
+  color: #ff385c;
+}
