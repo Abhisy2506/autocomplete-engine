@@ -1,0 +1,134 @@
+/* --- Base Modal Styles--- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--modal-bg);
+  padding: 32px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/*How It Works architecture css */
+.modal-content.wide {
+  max-width: 640px;
+}
+
+.modal-title {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.modal-body {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.modal-body ul {
+  margin-top: 12px;
+  padding-left: 20px;
+}
+
+.modal-body li {
+  margin-bottom: 8px;
+}
+
+.close-button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  float: right;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: #1557b0;
+}
+
+/* --- Specific Styles for How It Works Pipeline --- */
+.pipeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.step-card {
+  background-color: #f8f9fa;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+.step-card.blue   { border-left-color: #1a73e8; }
+.step-card.green  { border-left-color: #34a853; }
+.step-card.yellow { border-left-color: #fbbc05; }
+.step-card.red    { border-left-color: #ea4335; }
+.step-card.purple { border-left-color: #9334e8; }
+
+.step-title {
+  color: #202124;
+  font-weight: 600;
+  display: block;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: #5f6368;
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.step-desc code {
+  background-color: #e8eaed;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* --- Flowchart Modal Styles --- */
+.modal-content.flowchart-modal {
+  max-width: 860px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.flowchart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.flowchart-svg {
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+}
