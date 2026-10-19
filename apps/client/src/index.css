@@ -1,0 +1,77 @@
+:root {
+  /* Light Theme (Default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --border-color: #dfe1e5;
+  --border-focus: #1a73e8;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(32, 33, 36, 0.6);
+  --btn-hover: #f1f3f4;
+  --card-bg: #f8f9fa;
+  --code-bg: #e8eaed;
+  --btn-border: 1px solid rgba(0, 0, 0, 0.08);
+  --btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --search-shadow: 0 1px 6px rgba(32, 33, 36, 0.12);
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #f0f0f0;
+  --dropdown-shadow: 0 4px 16px rgba(32, 33, 36, 0.15);
+  --dropdown-hover: #f1f3f4;
+  --dropdown-text: #202124;
+  --dropdown-meta: #70757a;
+  --dropdown-divider: #ebebeb;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme */
+  --bg-primary: #202124;
+  --bg-secondary: #303134;
+  --text-primary: #e8eaed;
+  --text-secondary: #cbcbcb;
+  --border-color: #5f6368;
+  --border-focus: #8ab4f8;
+  --modal-bg: #303134;
+  --modal-overlay: rgba(0, 0, 0, 0.75);
+  --btn-hover: #3c4043;
+  --card-bg: #3c4043;
+  --code-bg: #202124;
+  --btn-border: 1px solid rgba(255, 255, 255, 0.12);
+  --btn-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.35);
+  --search-shadow: 0 1px 6px rgba(255, 255, 255, 0.45), 0 0 0 1px rgb(255, 255, 255);
+  --dropdown-bg: #303134;
+  --dropdown-border: rgba(255, 255, 255, 0.08);
+  --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --dropdown-hover: #3c4043;
+  --dropdown-text: #e8eaed;
+  --dropdown-meta: #9aa0a6;
+  --dropdown-divider: rgba(255, 255, 255, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
