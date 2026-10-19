@@ -1,0 +1,235 @@
+.search-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Wrapper containing both the input and the right-side button */
+
+.main-search-bar-wrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Container holding the text and green dot */
+.index-counter {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-top: 8px;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Pulsing / Blinking Green Dot */
+.index-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #04eb00;
+  border-radius: 50%;
+  display: inline-block;
+  animation: blinkPulse 2s infinite ease-in-out;
+}
+
+/* 2-Second Blink Cycle */
+@keyframes blinkPulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.4);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.85);
+    box-shadow: 0 0 0 4px rgba(52, 168, 83, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0);
+  }
+}
+
+.search-bar-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 130px 14px 24px;
+  font-size: 16px;
+  border: 1px solid #dfe1e5;
+  border-radius: 32px;
+  outline: none;
+  background-color: #fff;
+  box-shadow: var(--search-shadow);
+  transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms;
+}
+
+.search-input:hover,
+.search-input:focus {
+  box-shadow: 0 2px 10px rgba(32, 33, 36, 0.2);
+  border-color: #ff385c;
+}
+
+/* Pink Search button anchored to the right */
+.search-submit-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ff385c;
+  color: #ffffff;
+  border: none;
+  border-radius: 24px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.search-submit-btn:hover {
+  background-color: #e00b41;
+}
+
+.search-submit-btn:active {
+  transform: translateY(-50%) scale(0.97);
+}
+
+.search-icon {
+  width: 15px;
+  height: 15px;
+  stroke: #ffffff;
+}
+
+/* Dropdown Container */
+.dropdown-container {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: var(--dropdown-bg, #ffffff);
+  border: 1px solid var(--dropdown-border, #f0f0f0);
+  border-radius: 16px;
+  box-shadow: var(--dropdown-shadow, 0 4px 14px rgba(32, 33, 36, 0.18));
+  overflow: hidden;
+  z-index: 100;
+  padding: 8px 0;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Individual Result Row */
+.dropdown-item {
+  padding: 10px 24px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--dropdown-text, #202124);
+  display: flex;
+  align-items: center;
+  user-select: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--dropdown-hover, #f1f3f4);
+}
+
+.dropdown-item:active {
+  background-color: var(--dropdown-hover, #e8eaed);
+}
+
+/* Matched Substring Highlighting */
+.dropdown-item .highlight {
+  font-weight: 700;
+  color: #ff385c; /* Preserves the VeloCity brand accent */
+}
+
+/* City Country Code & Population Metadata */
+.city-metadata {
+  color: var(--dropdown-meta, #70757a);
+  font-size: 13px;
+  margin-left: 8px;
+  transition: color 0.25s ease;
+}
+
+/* Latency & Status Footer inside Dropdown */
+.latency-display {
+  padding: 8px 24px 4px 24px;
+  font-size: 12px;
+  color: var(--dropdown-meta, #70757a);
+  text-align: right;
+  border-top: 1px solid var(--dropdown-divider, #ebebeb);
+  margin-top: 6px;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+/* Empty / Loading message */
+.dropdown-message {
+  padding: 14px 24px;
+  color: var(--dropdown-meta, #70757a);
+  font-size: 14px;
+}
+
+/* --- Brand Logo Styling (Above Search Bar) --- */
+.brand-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+  user-select: none;
+}
+
+.brand-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 10px rgba(255, 56, 92, 0.2));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-logo-container:hover .brand-icon {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.brand-title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: var(--text-primary);
+  line-height: 1;
+  margin: 0;
+}
+
+.brand-title-accent {
+  color: #ff385c;
+  background: linear-gradient(135deg, #ff385c 0%, #e00b41 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-badge {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #70757a;
+  background-color: #f1f3f4;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
