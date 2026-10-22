@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { City } from '@autocomplete/database';
+import { search } from '@autocomplete/native-engine';
+import {City} from "@autocomplete/database"
 
 const app = express();
 
@@ -8,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// REST Endpoint: MongoDB-based prefix search
+// REST Endpoint
 app.get('/api/search', async (req, res) => {
   const query = req.query.q;
   
@@ -20,34 +21,21 @@ app.get('/api/search', async (req, res) => {
 
   const startHrTime = process.hrtime.bigint();
 
-  try {
-    // Escape special regex characters in query string
-    const escapedQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Call C++ Native Engine (Radix Tree prefix search + BK-Tree fuzzy fallback)
+  const results = search(query.trim(), limit);
 
-    // MongoDB prefix regex search sorted by descending population
-    const results = await City.find(
-      { name: { $regex: `^${escapedQuery}`, $options: 'i' } },
-      'geonameid name countryCode population'
-    )
-      .sort({ population: -1 })
-      .limit(limit)
-      .lean();
+  const endHrTime = process.hrtime.bigint();
+  const latencyMicros = Number(endHrTime - startHrTime) / 1000;
+  const latencyMs = (latencyMicros / 1000).toFixed(3);
 
-    const endHrTime = process.hrtime.bigint();
-    const latencyMicros = Number(endHrTime - startHrTime) / 1000;
-    const latencyMs = (latencyMicros / 1000).toFixed(3);
+  // Set diagnostic header for frontend UI latency badge
+  res.setHeader('X-Server-Latency-Ms', latencyMs);
 
-    // Diagnostic header showing the database lookup latency
-    res.setHeader('X-Server-Latency-Ms', latencyMs);
+  return res.json(results);
 
-    return res.json(results);
-  } catch (error) {
-    console.error('Database search failed:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
 });
 
-// REST Endpoint: City Detail by geonameid
+
 app.get('/api/city/:geonameid', async (req, res) => {
   try {
     const geonameid = parseInt(req.params.geonameid, 10);
@@ -55,7 +43,7 @@ app.get('/api/city/:geonameid', async (req, res) => {
       return res.status(400).json({ error: 'Invalid geonameid' });
     }
 
-    // Atomically increment search frequency
+    // Optional: atomically increment searchFrequency
     const city = await City.findOneAndUpdate(
       { geonameid },
       { $inc: { searchFrequency: 1 } },
