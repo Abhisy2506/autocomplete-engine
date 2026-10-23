@@ -1,4 +1,4 @@
-# ⚡ VeloCity: High-Performance Global Cities Autocomplete Engine
+# ⚡ RadixCity: High-Performance Global Cities Autocomplete Engine
 
 [![Node.js](https://img.shields.io/badge/Node.js-v20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=c%2B%2B&logoColor=white)](https://isocpp.org)
@@ -7,6 +7,8 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 
 > A low-latency hybrid search engine indexing **234,912+ global cities** in native C++ heap memory. Delivers microsecond-level prefix searches and Levenshtein typo corrections through a zero-overhead Node-API (N-API) memory bridge.
+
+![RadixCity Demo](./apps/client/public/assets/AutoComplete.gif)
 
 ## 📸 Application Preview
 
@@ -29,7 +31,7 @@ Traditional web autocomplete implementations suffer from three major bottlenecks
 2. **V8 Heap Bloat & GC Pauses:** Storing 250,000+ deeply nested Trie nodes as JavaScript objects inside Node.js exhausts the V8 heap limit and causes frequent Stop-The-World Garbage Collection stalls.
 3. **Expensive Typo Tolerance:** Running linear Levenshtein distance checks across 250k strings takes $O(N \cdot M \cdot K)$ per query, making real-time fuzzy search unviable in pure JS.
 
-**VeloCity solves this by moving the indexing and search algorithms into a compiled C++ native addon (`.node`) while keeping Node.js strictly as an asynchronous HTTP orchestration layer.**
+**RadixCity solves this by moving the indexing and search algorithms into a compiled C++ native addon (`.node`) while keeping Node.js strictly as an asynchronous HTTP orchestration layer.**
 
 ---
 
@@ -83,9 +85,9 @@ Traditional web autocomplete implementations suffer from three major bottlenecks
 ## 🧠 Algorithmic & Data Structure Deep-Dive
 
 ### 1. Compressed Radix Tree (Patricia Trie) with Precomputed Top-$K$
-Instead of a standard Trie where every single character allocates a new node with 26+ nullable pointers, VeloCity uses an **edge-compressed Radix Tree**:
+Instead of a standard Trie where every single character allocates a new node with 26+ nullable pointers, RadixCity uses an **edge-compressed Radix Tree**:
 - **Path Compression:** Chains of single-child nodes are merged into single string edges (e.g., `"francisco"`), dramatically reducing pointer overhead and improving CPU cache locality.
-- **$O(1)$ Result Extraction via Bounded Top-$K$:** A naive Trie must traverse the entire subtree beneath a prefix node and sort thousands of matching cities on every query. In VeloCity, each `RadixTreeNode` maintains a bounded **Top-5 vector sorted by population** during insertion. Once traversal reaches the target prefix node in $O(L)$ time, returning the top 5 most populated cities is an instant **$O(1)$ read**.
+- **$O(1)$ Result Extraction via Bounded Top-$K$:** A naive Trie must traverse the entire subtree beneath a prefix node and sort thousands of matching cities on every query. In RadixCity, each `RadixTreeNode` maintains a bounded **Top-5 vector sorted by population** during insertion. Once traversal reaches the target prefix node in $O(L)$ time, returning the top 5 most populated cities is an instant **$O(1)$ read**.
 
 ### 2. Burkhard-Keller Tree (BK-Tree) for Typo Tolerance
 When a user makes a spelling mistake (e.g., `"londn"` or `"pariss"`) and the Radix Tree returns 0 exact prefix matches, the engine automatically falls back to a **BK-Tree** built over cities with population $\ge 10,000$:
