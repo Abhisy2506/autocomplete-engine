@@ -7,6 +7,8 @@ import Logo from './Logo';
 import './search.css';
 import CityDetailModal from '../modal/CityDetailModal';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
 export default function SearchContainer() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -14,7 +16,7 @@ export default function SearchContainer() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCity, setSelectedCity] = useState(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
-  
+
   const debouncedQuery = useDebounce(query, 200); 
   const cache = useLRUCache(100);
 
@@ -43,17 +45,19 @@ export default function SearchContainer() {
     const fetchResults = async () => {
       setIsLoading(true);
       const startTime = performance.now();
-      
+
       try {
-        const response = await fetch(`http://localhost:8000/api/search?q=${debouncedQuery}`);
+        const response = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(debouncedQuery)}`);
         if (!response.ok) {
-           throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
-        // Latency calculation
-        const endTime = performance.now();
-        const processingTime = Math.round(endTime - startTime);
+
+        // Round latency to nearest integer
+        const serverLatency = response.headers.get('X-Server-Latency-Ms');
+        const processingTime = serverLatency 
+          ? Math.round(parseFloat(serverLatency)) 
+          : Math.round(performance.now() - startTime);
 
         // Update state
         setResults(data);
@@ -75,16 +79,18 @@ export default function SearchContainer() {
   }, [debouncedQuery]);
 
   useEffect(() => {
-       if(query !== debouncedQuery && query.trim()) {
-            setIsLoading(true);
-       }
+    if (query !== debouncedQuery && query.trim()) {
+      setIsLoading(true);
+    }
   }, [query, debouncedQuery]);
-
 
   const handleSelectCity = async (geonameid) => {
     setIsLoadingDetails(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/city/${geonameid}`);
+      const res = await fetch(`${API_BASE}/api/city/${geonameid}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch city details: ${res.status}`);
+      }
       const data = await res.json();
       setSelectedCity(data);
     } catch (err) {
@@ -96,20 +102,20 @@ export default function SearchContainer() {
 
   return (
     <div className="search-container">
-      <Logo/>
+      <Logo />
       <SearchBar value={query} onChange={setQuery} />
       <Dropdown 
-      query={query} 
-      results={results} 
-      latency={latency} 
-      isLoading={isLoading}
-      onSelectCity={handleSelectCity}
-    />
+        query={query} 
+        results={results} 
+        latency={latency} 
+        isLoading={isLoading} 
+        onSelectCity={handleSelectCity}
+      />
       <CityDetailModal 
-      city={selectedCity} 
-      loading={isLoadingDetails} 
-      onClose={() => setSelectedCity(null)} 
-    />
+        city={selectedCity} 
+        loading={isLoadingDetails} 
+        onClose={() => setSelectedCity(null)} 
+      />
     </div>
   );
 }

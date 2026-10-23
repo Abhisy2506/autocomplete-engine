@@ -5,8 +5,27 @@ import {City} from "@autocomplete/database"
 
 const app = express();
 
-// Middlewares
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(url => url.trim())
+  : ['http://localhost:5173'];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error(`CORS policy blocked access from: ${origin}`));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'OPTIONS'],
+    exposedHeaders: ['X-Server-Latency-Ms']
+  })
+);
+
 app.use(express.json());
 
 // REST Endpoint
