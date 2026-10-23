@@ -14,6 +14,7 @@
     "start:client": "npm --prefix apps/client run preview",
     "build:client": "npm --prefix apps/client run build",
     "build:engine": "npm --prefix packages/native-engine run build",
+    "render-build": "npm install && npm run build:engine",
     "test": "node --test packages/native-engine/test.js",
     "benchmark": "node apps/server/benchmark.js",
     "seed": "node packages/database/src/seed.js"
