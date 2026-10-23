@@ -34,6 +34,23 @@ export default function Dropdown({ query, results, latency, isLoading, onSelectC
     );
   };
 
+  // Helper to format C++ engine time:
+  // - If < 1ms: Float with 2 decimal places (e.g. 0.04ms)
+  // - If >= 1ms: Round to nearest integer (e.g. 2ms)
+  const formatEngineTime = (engineVal) => {
+    if (engineVal === null || engineVal === undefined) return '<0.01ms';
+    const num = parseFloat(engineVal);
+    if (isNaN(num)) return '<0.01ms';
+
+    if (num <= 0) {
+      return '<0.01ms';
+    } else if (num < 1) {
+      return `${num.toFixed(2)}ms`;
+    } else {
+      return `${Math.round(num)}ms`;
+    }
+  };
+
   return (
     <div className="dropdown-container">
       {results.map((city) => (
@@ -49,9 +66,21 @@ export default function Dropdown({ query, results, latency, isLoading, onSelectC
         </div>
       ))}
       
-      {latency !== null && (
+      {latency && (
         <div className="latency-display">
-          ~{latency}ms server processing time
+          {typeof latency === 'object' ? (
+            latency.isCacheHit ? (
+              <span>⚡ <strong>0ms</strong> (In-Memory LRU Cache)</span>
+            ) : (
+              <span>
+                ⚡ C++ Engine: <strong>{formatEngineTime(latency.engine)}</strong> • Network RTT: <strong>~{latency.roundtrip}ms</strong>
+              </span>
+            )
+          ) : (
+            <span>
+              ~{parseFloat(latency) < 1 ? `${parseFloat(latency).toFixed(2)}ms` : `${Math.round(parseFloat(latency))}ms`} processing time
+            </span>
+          )}
         </div>
       )}
     </div>

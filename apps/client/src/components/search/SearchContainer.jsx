@@ -36,7 +36,11 @@ export default function SearchContainer() {
     // 1. Check LRU Cache first (Zero-latency RAM cache hit)
     if (cache.has(debouncedQuery)) {
       setResults(cache.get(debouncedQuery));
-      setLatency(0); // Instant in-memory cache hit
+      setLatency({
+        engine: '0.00',
+        roundtrip: 0,
+        isCacheHit: true
+      });
       setIsLoading(false);
       return;
     }
@@ -53,15 +57,29 @@ export default function SearchContainer() {
         }
         const data = await response.json();
 
-        // Calculate full network + server roundtrip time in milliseconds
+        // Total network + server roundtrip
         const endTime = performance.now();
         const roundtripTime = Math.round(endTime - startTime);
 
-        // Update state
-        setResults(data);
-        setLatency(roundtripTime);
+        // Read C++ native engine execution time from response header
+        const rawServerHeader = response.headers.get('X-Server-Latency-Ms');
+        let formattedEngineTime = null;
 
-        // Save to Cache
+        if (rawServerHeader !== null) {
+          const parsed = parseFloat(rawServerHeader);
+          // Keep sub-millisecond precision (e.g. "0.01ms") if < 1ms, otherwise round
+          formattedEngineTime = rawServerHeader !== null ? parseFloat(rawServerHeader) : null;;
+        }
+
+        // Store both metrics
+        setResults(data);
+        setLatency({
+          engine: formattedEngineTime, // e.g. "0.02" or "1"
+          roundtrip: roundtripTime,    // e.g. 346
+          isCacheHit: false
+        });
+
+        // Save to LRU Cache
         cache.put(debouncedQuery, data);
 
       } catch (error) {
