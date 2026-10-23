@@ -8,7 +8,7 @@
 
 > A low-latency hybrid search engine indexing **234,912+ global cities** in native C++ heap memory. Delivers microsecond-level prefix searches and Levenshtein typo corrections through a zero-overhead Node-API (N-API) memory bridge.
 
-![RadixCity Demo](./apps/client/public/assets/AutoComplete.gif)
+![RadixCity Demo](./apps/client/public/assets/RadixCity.gif)
 
 ## 📸 Application Preview
 
@@ -20,7 +20,14 @@
 | 🐢 Before C++ Engine (MongoDB Scan) | 🚀 After Native C++ Engine (Radix + BK-Tree) |
 | :---: | :---: |
 | <img src="./apps/client/public/assets/texas%20before%20CPP.png" alt="Search Latency Before C++" width="100%" /> | <img src="./apps/client/public/assets/texas%20after%20CPP.png" alt="Search Latency After C++" width="100%" /> |
-| *Database query & network round-trip latency* | *Sub-millisecond native C++ memory retrieval* |
+| *Database query & network round-trip latency (~285ms)* | *Sub-millisecond native C++ memory retrieval (<0.02ms)* |
+
+### 🛰️ Core UI Capabilities
+* **Satellite Aerial View Modal:** Selecting any city fetches high-precision GeoJSON coordinates from MongoDB and embeds a live Google Maps satellite aerial view with direct links for territorial boundary exploration.
+* **Real-time Popularity Counter:** Atomically logs and increments search queries (`$inc: { searchFrequency: 1 }`) for trending insights.
+* **Interactive Architecture Flowchart Modal:** In-app SVG diagram visualizing the full execution lifecycle from React to native C++ pointers.
+* **Progressive Web App (PWA):** Installable desktop/mobile experience with offline shell asset caching via Workbox service workers.
+* **Dynamic Theme Engine:** Instant Light / Dark mode toggle with persistent CSS variable theme tokens.
 
 ---
 
@@ -98,9 +105,11 @@ When a user makes a spelling mistake (e.g., `"londn"` or `"pariss"`) and the Rad
 - This prunes 90%+ of the search space compared to a brute-force edit-distance scan.
 
 ### 3. Client-Side $O(1)$ LRU Cache & DevTools Hook
-- Built a custom React hook (`useLRUCache`) backed by JavaScript's `Map` insertion-order guarantees.
-- Repeated prefixes and `Backspace` keystrokes resolve in **0ms** directly from browser memory without firing network requests.
-- Exposed via `window.__LRU_CACHE__.dump()` so developers can inspect live cache hits and eviction states directly in Chrome DevTools.
+- **Zero-Latency Repeat Queries:** Custom React hook (`useLRUCache`) backed by JavaScript's `Map` insertion-order guarantees. Repeated queries and `Backspace` keystrokes resolve in **0ms** from browser RAM.
+- **200ms Keystroke Debouncer:** Eliminates transient network requests during fast typing sequences.
+- **Matched Prefix Highlighting:** Dynamically isolates and highlights matching query substrings in the suggestion dropdown.
+- **Dual-Metric Latency Breakdown:** Real-time badge in the UI displaying the sub-millisecond C++ engine duration alongside total network round-trip time.
+- **Live DevTools Inspection:** Exposed via `window.__LRU_CACHE__.dump()` so developers can inspect live cache keys, hit counts, and eviction states directly in Chrome DevTools.
 
 ---
 
@@ -133,6 +142,32 @@ Native C++ Engine [████████████████████]
 - **Microsecond Median Latency:** Lookups hitting the Compressed Radix Tree resolve in **11 µs (`0.011 ms`)**, completely eliminating database network round-trips and B-Tree index scan overhead.
 - **Bounded Fuzzy Tail Latency:** The worst-case tail latencies ($p95$ at `13.87 ms` and $p99$ at `17.91 ms`) represent BK-Tree Levenshtein metric traversals on misspelled queries—still **17x faster** than MongoDB's baseline prefix query.
 - **V8 Garbage Collection Stability:** Storing the index in the native C++ process heap (`std::unique_ptr`) isolates the Node.js V8 runtime from memory pressure and GC pauses under sustained load.
+
+### 🔬 Running the Benchmark Suite Locally
+You can run the full 1,000-query comparative benchmark on your machine at any time:
+```bash
+npm run benchmark
+```
+*(Executes `apps/server/benchmark.js`, evaluates both engines across 1,000 iterations, and outputs full percentile breakdowns and throughput metrics).*
+
+---
+
+## 🧪 Automated Testing Suite
+
+The C++ native addon is verified with automated tests using Node's native test runner (`node:test` + `node:assert/strict`):
+
+```bash
+npm test
+```
+
+| Test Case | Coverage / Verification |
+| :--- | :--- |
+| **Engine Ingestion** | Ingests mock datasets into native heap memory and asserts indexed count. |
+| **Top-$K$ Population Ranking** | Validates prefix searches return records in strict descending population order. |
+| **Radix Edge Splitting** | Asserts correct multi-character path compression and branching without data loss. |
+| **Case Insensitivity** | Validates uppercase, lowercase, and mixed-case inputs produce identical matches. |
+| **BK-Tree Typo Tolerance** | Confirms Levenshtein distance $\le 2$ typo correction (e.g., `"londn"` $\to$ London, `"pariss"` $\to$ Paris). |
+| **Edge Case Resilience** | Ensures random garbage strings and empty inputs return empty arrays gracefully without engine crashes. |
 
 ---
 
@@ -247,6 +282,9 @@ CORS_ORIGIN=*
 
 MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/
 DB_NAME=Cities
+
+# Frontend Target API (Leave blank in local dev to use Vite's proxy, or set public API URL in production)
+VITE_API_BASE_URL=
 ```
 
 ### 3. Compile the C++ Native Engine
@@ -265,13 +303,49 @@ npm run seed
 
 ### 5. Run Backend & Frontend
 ```bash
-# Terminal 1: Start Express + C++ Engine Server (Port 8000)
-npm run dev:server
-
-# Terminal 2: Start React + Vite Client (Port 5173)
-cd apps/client
+# Option A: Start both concurrently from root
 npm run dev
+
+# Option B: Run in separate terminals
+npm run dev:server   # Terminal 1: Express + C++ Engine Server (Port 8000)
+npm run dev:client   # Terminal 2: React + Vite Client (Port 5173)
 ```
+
+---
+
+## 📜 Workspace Scripts Reference
+
+All primary workflows are automated at the monorepo root via npm scripts:
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Runs backend orchestration server and Vite client concurrently. |
+| `npm run dev:server` | Starts the Express server with MongoDB hydration and C++ engine on port 8000. |
+| `npm run dev:client` | Starts the Vite React development server with HMR on port 5173. |
+| `npm run build:engine` | Triggers `node-gyp rebuild` to compile the C++ addon in `Release` mode. |
+| `npm run build:client` | Compiles the React application and generates PWA Service Worker assets. |
+| `npm test` | Runs the automated C++ engine unit test suite (`node:test`). |
+| `npm run benchmark` | Executes the 1,000-query benchmark comparing MongoDB vs. C++ Native Engine. |
+| `npm run seed` | Streams GeoNames records and seeds the MongoDB database in 1,000-item chunks. |
+
+---
+
+## 🌐 Production & Deployment Architecture
+
+### 1. Persistent Backend Server Requirement
+Because RadixCity loads **234,912+ cities directly into the C++ native process heap** on boot for zero-overhead lookups:
+* **Cannot use stateless Serverless Functions** (e.g. AWS Lambda / Vercel Serverless Functions), as cold starts would discard the in-memory tree nodes.
+* **Recommended Hosting:** Persistent VM or Container environments (**Render**, **Railway**, **Fly.io**, **AWS EC2**, or a **VPS**) with GCC/Clang or MSVC toolchains installed.
+
+### 2. Cross-Origin Latency Header Exposure
+When serving the React frontend on a custom domain (e.g., Vercel) and the backend on a separate server, the backend exposes the microsecond execution timing header:
+```javascript
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  exposedHeaders: ['X-Server-Latency-Ms']
+}));
+```
+This ensures the browser's `fetch()` API can read `response.headers.get('X-Server-Latency-Ms')` across origins to drive the real-time UI latency badge.
 
 ---
 
@@ -282,5 +356,7 @@ Open the browser console (`F12`) while typing in the search bar and run:
 window.__LRU_CACHE__.dump()
 ```
 This outputs a live table of cached prefixes, result counts, and top-ranked cities stored in the client-side LRU cache.
+
+---
 
 ---
