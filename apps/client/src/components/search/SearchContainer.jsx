@@ -33,10 +33,10 @@ export default function SearchContainer() {
       return;
     }
 
-    // 1. Check LRU Cache first (Zero-latency hit)
+    // 1. Check LRU Cache first (Zero-latency RAM cache hit)
     if (cache.has(debouncedQuery)) {
       setResults(cache.get(debouncedQuery));
-      setLatency(0);
+      setLatency(0); // Instant in-memory cache hit
       setIsLoading(false);
       return;
     }
@@ -53,15 +53,13 @@ export default function SearchContainer() {
         }
         const data = await response.json();
 
-        // Round latency to nearest integer
-        const serverLatency = response.headers.get('X-Server-Latency-Ms');
-        const processingTime = serverLatency 
-          ? Math.round(parseFloat(serverLatency)) 
-          : Math.round(performance.now() - startTime);
+        // Calculate full network + server roundtrip time in milliseconds
+        const endTime = performance.now();
+        const roundtripTime = Math.round(endTime - startTime);
 
         // Update state
         setResults(data);
-        setLatency(processingTime);
+        setLatency(roundtripTime);
 
         // Save to Cache
         cache.put(debouncedQuery, data);
