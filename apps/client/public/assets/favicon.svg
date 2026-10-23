@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Soft Background Rounded Container -->
+  <rect width="64" height="64" rx="16" fill="#1e1f22"/>
+  
+  <!-- Subtle Outer Glow / Ring -->
+  <circle cx="32" cy="30" r="22" stroke="#ff385c" stroke-width="1.5" stroke-opacity="0.3"/>
+  
+  <!-- City Location Pin Body -->
+  <path d="M32 8C21.5066 8 13 16.5066 13 27C13 38.8 28.5 53.2 30.8 55.3C31.5 55.9 32.5 55.9 33.2 55.3C35.5 53.2 51 38.8 51 27C51 16.5066 42.4934 8 32 8Z" 
+        fill="url(#pinGradient)"/>
+  
+  <!-- Speed Lightning Bolt (Cutout / Dynamic Symbol) -->
+  <path d="M34 16L24 29H31L28 41L40 27H33L35 16Z" 
+        fill="#ffffff" 
+        stroke="#ffffff" 
+        stroke-width="0.5" 
+        stroke-linejoin="round"/>
+
+  <!-- Radial Pin Gradient -->
+  <defs>
+    <linearGradient id="pinGradient" x1="13" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff385c"/>
+      <stop offset="100%" stop-color="#d90b3e"/>
+    </linearGradient>
+  </defs>
+</svg>
