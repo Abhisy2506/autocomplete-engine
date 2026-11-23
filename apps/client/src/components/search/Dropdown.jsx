@@ -56,7 +56,7 @@ export default function Dropdown({ query, results, latency, isLoading, onSelectC
       {results.map((city) => (
         <div 
           key={city.geonameid} 
-          className="dropdown-item"
+          className="dropdown-item liquid-glass"
           onClick={() => onSelectCity && onSelectCity(city.geonameid)}
         >
           {renderHighlightedText(city.name, query)}

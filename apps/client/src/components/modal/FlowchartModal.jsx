@@ -106,7 +106,7 @@ export default function FlowchartModal({ onClose }) {
           </svg>
         </div>
 
-        <button className="close-button" style={{ marginTop: '16px' }} onClick={onClose}>
+        <button className="close-button liquid-glass" style={{ marginTop: '16px' }} onClick={onClose}>
           Close
         </button>
       </div>

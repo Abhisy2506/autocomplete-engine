@@ -14,7 +14,7 @@ export default function SearchBar({ value, onChange, onSearch }) {
         />
         <button 
           type="button" 
-          className="search-submit-btn"
+          className="search-submit-btn liquid-glass"
           onClick={() => onSearch && onSearch()}
         >
           <svg 
@@ -29,7 +29,7 @@ export default function SearchBar({ value, onChange, onSearch }) {
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          <span>Search</span>
+          Search
         </button>
       </div>
       

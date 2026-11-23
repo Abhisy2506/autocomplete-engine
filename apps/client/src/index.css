@@ -14,13 +14,24 @@
   --btn-border: 1px solid rgba(0, 0, 0, 0.08);
   --btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
   --search-shadow: 0 1px 6px rgba(32, 33, 36, 0.12);
-  --dropdown-bg: #ffffff;
-  --dropdown-border: #f0f0f0;
-  --dropdown-shadow: 0 4px 16px rgba(32, 33, 36, 0.15);
-  --dropdown-hover: #f1f3f4;
+  --dropdown-bg: rgba(255, 255, 255, 0.62);
+  --dropdown-border: rgba(255, 255, 255, 0.45);
+  --dropdown-shadow: 0 16px 40px rgba(0, 0, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.85);
   --dropdown-text: #202124;
   --dropdown-meta: #70757a;
-  --dropdown-divider: #ebebeb;
+  --dropdown-divider: rgba(0, 0, 0, 0.08);
+
+  /* Liquid Glass System (Light Theme) */
+  --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(242, 246, 252, 0.55) 45%, rgba(226, 236, 250, 0.42) 100%);
+  --glass-border-hover: rgba(255, 255, 255, 0.95);
+  --glass-outline-hover: rgba(0, 0, 0, 0.06);
+  --glass-shadow-hover: 0 8px 24px -4px rgba(32, 33, 36, 0.12), 0 2px 6px -1px rgba(32, 33, 36, 0.06), inset 0 1.5px 1px 0 #ffffff, inset 0 -1.5px 2px 0 rgba(195, 210, 230, 0.45), inset 1px 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-dome-glare: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --glass-shimmer: linear-gradient(65deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+  --glass-bg-active: linear-gradient(135deg, rgba(235, 240, 248, 0.9) 0%, rgba(220, 228, 240, 0.7) 100%);
+  --glass-border-active: rgba(255, 255, 255, 0.6);
+  --glass-outline-active: rgba(0, 0, 0, 0.08);
+  --glass-shadow-active: 0 2px 6px rgba(32, 33, 36, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme='dark'] {
@@ -39,13 +50,24 @@
   --btn-border: 1px solid rgba(255, 255, 255, 0.12);
   --btn-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.35);
   --search-shadow: 0 1px 6px rgba(255, 255, 255, 0.45), 0 0 0 1px rgb(255, 255, 255);
-  --dropdown-bg: #303134;
-  --dropdown-border: rgba(255, 255, 255, 0.08);
-  --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
-  --dropdown-hover: #3c4043;
+  --dropdown-bg: rgba(22, 27, 34, 0.65);
+  --dropdown-border: rgba(255, 255, 255, 0.15);
+  --dropdown-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.18);
   --dropdown-text: #e8eaed;
   --dropdown-meta: #9aa0a6;
   --dropdown-divider: rgba(255, 255, 255, 0.08);
+
+  /* Liquid Glass System (Dark Theme) */
+  --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 50%, rgba(140, 185, 255, 0.12) 100%);
+  --glass-border-hover: rgba(255, 255, 255, 0.32);
+  --glass-outline-hover: rgba(0, 0, 0, 0.4);
+  --glass-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.55), 0 3px 8px rgba(0, 0, 0, 0.3), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.45);
+  --glass-dome-glare: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-shimmer: linear-gradient(65deg, transparent 35%, rgba(255, 255, 255, 0.18) 50%, transparent 65%);
+  --glass-bg-active: linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.12) 100%);
+  --glass-border-active: rgba(255, 255, 255, 0.25);
+  --glass-outline-active: transparent;
+  --glass-shadow-active: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
 * {
@@ -74,4 +96,90 @@ body {
   display: flex;
   flex-direction: column;
   padding: 20px;
+}
+
+
+/* Liquid Glass System Reusable across any button, dropdown item, or interactive control*/
+
+.liquid-glass {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  outline: 1px solid transparent;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: 
+    background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    outline-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.15s ease;
+}
+
+/* Elevate text and icons above background glass reflections */
+.liquid-glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Convex Specular Highlight Arc (Apple Curved Top Glass Dome) */
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: var(--glass-dome-glare);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.22s ease;
+}
+
+/* Dynamic Diagonal Light Sweep across the lens */
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: var(--glass-shimmer);
+  transform: translateX(-100%);
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Hover: Liquid Glass Refraction & Elevation */
+.liquid-glass:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  outline-color: var(--glass-outline-hover);
+  box-shadow: var(--glass-shadow-hover);
+  backdrop-filter: blur(16px) saturate(190%);
+  -webkit-backdrop-filter: blur(16px) saturate(190%);
+  transform: translateY(-1.5px) scale(1.006);
+}
+
+.liquid-glass:hover::before {
+  opacity: 1;
+}
+
+.liquid-glass:hover::after {
+  transform: translateX(100%);
+}
+
+/* Active / Press: Elastic tactile compression */
+.liquid-glass:active {
+  background: var(--glass-bg-active);
+  border-color: var(--glass-border-active);
+  outline-color: var(--glass-outline-active);
+  box-shadow: var(--glass-shadow-active);
+  transform: translateY(0) scale(0.985);
 }

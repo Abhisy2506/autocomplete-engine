@@ -27,6 +27,14 @@ export default function HowItWorksModal({ onClose }) {
             Every keystroke travels through a high-throughput, low-latency pipeline designed to bypass traditional database bottlenecks:
           </p>
 
+          <div className="pipeline-gif-container">
+            <img 
+              src="/assets/RadixCity.gif" 
+              alt="RadixCity Pipeline Architecture" 
+              className="pipeline-gif" 
+            />
+          </div>
+
           <div className="pipeline-steps">
             <div className="step-card blue">
               <span className="step-title">1. Client-Side Cache (React LRU)</span>
@@ -65,7 +73,7 @@ export default function HowItWorksModal({ onClose }) {
           </div>
         </div>
 
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button liquid-glass" onClick={onClose}>
           Close
         </button>
       </div>

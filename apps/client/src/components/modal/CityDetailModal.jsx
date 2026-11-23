@@ -122,11 +122,11 @@ export default function CityDetailModal({ city, loading, onClose }) {
                   href={mapsExternalUrl} 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="maps-link-btn"
+                  className="maps-link-btn liquid-glass"
                 >
                   📍 Highlight on Google Maps ↗
                 </a>
-                <button className="close-button" onClick={onClose}>
+                <button className="close-button liquid-glass" onClick={onClose}>
                   Close
                 </button>
               </div>

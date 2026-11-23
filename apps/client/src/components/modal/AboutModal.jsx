@@ -40,7 +40,7 @@ export default function AboutModal({ onClose }) {
             </li>
           </ul>
         </div>
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button liquid-glass" onClick={onClose}>
           Close
         </button>
       </div>
